@@ -1,0 +1,68 @@
+/**
+ * 父类通用配置
+ * all projects是对所有project的配置
+ */
+allprojects {
+    group 'com.ding'
+    version '1.0-SNAPSHOT'
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+/**
+ * subprojects是对所有Child Project的配置
+ */
+subprojects {
+
+    //打包插件
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    ext {
+        springBootVersion = '1.5.22.RELEASE'
+        springcloudNetflixVersion = "1.4.6.RELEASE"
+    }
+    repositories {
+        mavenLocal()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url "http://central.maven.org/maven2/" }
+        mavenCentral()
+    }
+
+    dependencies {
+        compile (
+                "org.springframework.boot:spring-boot-parent:${springBootVersion}",
+                "org.springframework.boot:spring-boot-starter:${springBootVersion}",
+                "org.springframework.boot:spring-boot-starter-web:${springBootVersion}",
+                //加入security，是因为访问eureka-server需要用户名和密码访问，为了安全
+                "org.springframework.boot:spring-boot-starter-security:${springBootVersion}",
+
+                "org.springframework.boot:spring-boot-devtools:${springBootVersion}",
+
+                "com.alibaba:fastjson:1.2.62",
+                "org.apache.tomcat.embed:tomcat-embed-core:8.5.43",
+
+                group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+
+        )
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
+/**
+ * gradle脚本执行所需依赖，分别是对应的maven库和插件
+ */
+buildscript {
+    ext {
+        springBootVersion = '1.5.22.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url "http://central.maven.org/maven2/" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}

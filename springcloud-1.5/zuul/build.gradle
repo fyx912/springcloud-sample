@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile (
+            "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${springcloudNetflixVersion}",
+            //路由
+            "org.springframework.cloud:spring-cloud-starter-netflix-zuul:${springcloudNetflixVersion}",
+            //熔断
+            "org.springframework.cloud:spring-cloud-starter-netflix-hystrix:${springcloudNetflixVersion}"
+    )
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile (
+            "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${springcloudNetflixVersion}",
+            //熔断
+            "org.springframework.cloud:spring-cloud-starter-netflix-hystrix:${springcloudNetflixVersion}",
+            //熔断dashboard
+            "org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard:${springcloudNetflixVersion}",
+            //聚合hystrix集群
+            "org.springframework.cloud:spring-cloud-starter-netflix-turbine:${springcloudNetflixVersion}",
+            //Spring Boot Actuator，感应服务端变化
+            "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    )
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
