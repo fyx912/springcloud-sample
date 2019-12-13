@@ -1,0 +1,59 @@
+server:
+  port: 8020
+spring:
+  application:
+    name: ribbon-service
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+security:
+  user:
+    name: admin
+    password: 123456
+  basic:
+    enabled: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${security.user.name}:${security.user.password}@127.0.0.1:8010/eureka/
+  instance:
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}(${spring.application.name})
+    prefer-ip-address: true
+
+
+
+ribbon:
+  #请求处理的超时时间
+  ReadTimeout: 4000
+  #请求连接的超时时间
+  ConnectTimeout: 6000
+  #对当前服务的重试次数
+  MaxAutoRetries: 2
+  #切换实例的重试次数
+  MaxAutoRetriesNextServer: 0
+  #对所有操作请求都进行重试
+  OkToRetryOnAllOperations: true
+
+
+
+feign:
+  hystrix:
+    enabled: true #开启熔断
+  httpclient:
+    connection-timeout: 10000
+
+#开启hystrix请求超时机制   也可以设置成永久不超时
+hystrix:
+  command:
+    default: #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+          enabled: true
+      isolation:
+        thread:
+          timeoutInMilliseconds: 5000 #设置超时时间为20s

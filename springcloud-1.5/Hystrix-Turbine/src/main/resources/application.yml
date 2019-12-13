@@ -1,0 +1,39 @@
+server:
+  port: 8060
+
+spring:
+  application:
+    name: hystrix-turbine
+
+security:
+  basic:
+    enabled: false
+  user:
+    name: admin
+    password: 123456
+
+eureka:
+  serviceUrl: localhost:8010 #注册中心服务器IP (收到添加)
+  instance:
+    appname: hystrix-turbine
+  # 设置心跳的时间间隔（默认是30秒）
+    lease-renewal-interval-in-seconds: 3
+  # 如果现在超过了5秒的间隔（默认是90秒）
+    lease-expiration-duration-in-seconds: 5
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}(${eureka.instance.appname})
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://${security.user.name}:${security.user.password}@${eureka.serviceUrl}/eureka/
+
+#要在被监控的项目中开启端点 hystrix.stream
+turbine:
+  #turbine监控的服务名称，可以多个
+  app-config: feign-service,ribbon-service,zuul-api
+  aggregator:
+    cluster-config: default
+  cluster-name-expression: new String("default")
+  # 设置为true，可以让同一主机上的服务通过主机名与端口号的组合来进行区分
+  combine-host-port: true
+  instanceUrlSuffix: /hystrix.stream  #没有的话会出现异常
+
