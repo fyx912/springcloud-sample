@@ -42,11 +42,16 @@ subprojects {
                 "org.springframework.boot:spring-boot-devtools:${springBootVersion}",
 
                 "com.alibaba:fastjson:1.2.62",
-                "org.apache.tomcat.embed:tomcat-embed-core:8.5.43",
-
                 group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
 
         )
+//        providedCompile (
+//
+//        )
+
+//        provider(
+//                group:"org.apache.tomcat.embed",name:"tomcat-embed-core",version:  '8.5.43'
+//        )
         testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 }

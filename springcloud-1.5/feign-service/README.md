@@ -68,3 +68,4 @@ hystrix:
         @RefreshScope
  3、config server 调用post方法:http://localhost:8000/bus/refresh,自动通知客户端刷新消息
 ````
+###### 5、zipkin 链路追踪

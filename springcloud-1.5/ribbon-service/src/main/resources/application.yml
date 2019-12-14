@@ -9,6 +9,8 @@ spring:
       enabled: true
     livereload:
       enabled: true
+  zipkin:
+    base-url: http://192.168.3.7:8060
 security:
   user:
     name: admin
