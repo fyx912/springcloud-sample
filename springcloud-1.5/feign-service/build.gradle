@@ -21,8 +21,6 @@ dependencies {
             "org.springframework.cloud:spring-cloud-starter-openfeign:${springcloudNetflixVersion}",
             //熔断dashboard
 //            "org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard:${springcloudNetflixVersion}",
-            //Spring Boot Actuator，感应服务端变化
-            "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}",
 
             //<!--Spring Cloud Config 客户端依赖-->
             "org.springframework.cloud:spring-cloud-starter-config:${springcloudNetflixVersion}",

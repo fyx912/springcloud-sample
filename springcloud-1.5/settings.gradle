@@ -6,4 +6,5 @@ include 'zuul'
 include 'Hystrix-Turbine'
 include 'config-service'
 include 'zipkin-service'
+include 'admin-server'
 

@@ -17,6 +17,13 @@ security:
     password: 123456
   basic:
     enabled: false
+
+
+# 配置关闭安全验证
+management:
+  security:
+    enabled: false
+
 eureka:
   #自己编写，用于修改注册中心的服务地址
   serverUrl: 127.0.0.1

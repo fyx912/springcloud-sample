@@ -6,3 +6,4 @@
 ### 4、zuul 网关
 ### 5、config server + bus (配置中心+消息总线)
 ### 6、zipkin 链路追踪
+### 7.spring boot admin 监控
