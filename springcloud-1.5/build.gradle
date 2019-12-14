@@ -22,6 +22,7 @@ subprojects {
     ext {
         springBootVersion = '1.5.22.RELEASE'
         springcloudNetflixVersion = "1.4.6.RELEASE"
+        springcloudVsersion = "1.4.6.RELEASE"
     }
     repositories {
         mavenLocal()

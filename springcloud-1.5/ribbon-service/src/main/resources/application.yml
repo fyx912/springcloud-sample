@@ -15,11 +15,13 @@ security:
     password: 123456
   basic:
     enabled: false
-
 eureka:
+  #自己编写，用于修改注册中心的服务地址
+  serverUrl: 127.0.0.1
+  port: 8010
   client:
     service-url:
-      defaultZone: http://${security.user.name}:${security.user.password}@127.0.0.1:8010/eureka/
+      defaultZone: http://${security.user.name}:${security.user.password}@${eureka.serverUrl}:${eureka.port}/eureka/
   instance:
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}(${spring.application.name})
     prefer-ip-address: true

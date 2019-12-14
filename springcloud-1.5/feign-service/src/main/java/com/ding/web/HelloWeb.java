@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +21,7 @@ import java.util.Map;
  * @Date: 2019-12-13 14:47
  * @Description:
  */
+@RefreshScope //自动刷新
 @RestController
 public class HelloWeb {
     private Logger log = LoggerFactory.getLogger(HelloWeb.class);
@@ -77,5 +80,39 @@ public class HelloWeb {
        String result = helloRemote.hello();
         log.info("result:[{}]",result);
         return result;
+    }
+
+    /**
+     * 获取github中的配置
+     */
+    @Value("${user.name}")
+    private String userName;
+    @Value("${user.password}")
+    private String password;
+    @Value("${user.age}")
+    private String age;
+    @Value("${user.address}")
+    private String address;
+    @Value("${user.profiles}")
+    private String profiles;
+
+    /**
+     * 从注册中心获取配置
+     * @return
+     */
+    @GetMapping("config")
+    public String config(){
+        Map map = new HashMap();
+        map.put("name",userName);
+        map.put("password",password);
+        map.put("age",age);
+        map.put("address",address);
+        map.put("profiles",profiles);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",0);
+        jsonObject.put("msg","success");
+        jsonObject.put("data",map);
+        return jsonObject.toJSONString();
     }
 }

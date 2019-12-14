@@ -1,0 +1,57 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: config-service
+  cloud:
+    config:
+      enabled: true
+      server:
+        git:
+          uri: https://github.com/fyx912/mySpringcloudConfig
+          #仓库中的相对地址，即文件夹，多个文件夹用逗号隔开
+          search-paths: repo,test,eureka-client,feign-service,ribbon-sevice,zull-api
+          #clone下来的配置文件保存在本地的位置，文件夹不存在会自动创建。连不上git时会使用这里的配置
+          basedir: ${user.home}/logs/config
+          #如果Git仓库为公开仓库，可以不填写用户名和密码，如果是私有仓库需要填写
+          clone-on-start: true
+          #如果Git仓库为公开仓库，可以不填写用户名和密码，如果是私有仓库需要填写
+#         username:
+#         password:
+      #git分支
+      label: master
+    bus:
+      trace:
+        enabled: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+
+
+security:
+  user:
+    name: admin
+    password: 123456
+  basic:
+    enabled: false
+
+eureka:
+  #自己编写，用于修改注册中心的服务地址
+  serverUrl: 127.0.0.1
+  port: 8010
+  client:
+    service-url:
+      defaultZone: http://${security.user.name}:${security.user.password}@${eureka.serverUrl}:${eureka.port}/eureka/
+  instance:
+    instance-id:  ${spring.cloud.client.ipAddress}:${server.port}(${spring.application.name})
+    prefer-ip-address: true
+
+# 配置关闭安全验证
+management:
+  security:
+    enabled: false
+

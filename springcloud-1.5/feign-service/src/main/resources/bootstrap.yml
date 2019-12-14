@@ -3,11 +3,50 @@ server:
 spring:
   application:
     name: feign-service
+  profiles:
+    active: dev
   devtools:
     restart:
       enabled: true
     livereload:
       enabled: true
+############################################
+# spring cloud config 配置
+############################################
+  cloud:
+    config:
+      discovery:
+#       uri: http://localhost:7001/    #Config server的uri
+        enabled: true #开启配置服务发现
+        service-id: config-service  #配置中心服务名
+      #指定分支
+      label: master
+      #指定环境
+      profile: ${spring.profiles.active}
+      #失败快速响应与重试
+      fail-fast: true
+      #配置中心配置文件名
+      name: feign-service
+      retry:
+        initial-interval: 1000 #最初重试间隔为 1000 毫秒
+        max-attempts: 6  # 最多重试 6 次
+        max-interval: 2000 #最长重试间隔为 2000 毫秒
+        multiplier: 1.1 #每次重试失败后，重试间隔所增加的倍数
+    bus:
+      enabled: true # 开启消息跟踪
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+
+# 配置关闭安全验证
+management:
+  security:
+    enabled: false
+
 security:
   user:
     name: admin
@@ -16,9 +55,12 @@ security:
     enabled: false
 
 eureka:
+  #自己编写，用于修改注册中心的服务地址
+  serverUrl: 127.0.0.1
+  port: 8010
   client:
     service-url:
-      defaultZone: http://${security.user.name}:${security.user.password}@127.0.0.1:8010/eureka/
+      defaultZone: http://${security.user.name}:${security.user.password}@${eureka.serverUrl}:${eureka.port}/eureka/
   instance:
     instance-id:  ${spring.cloud.client.ipAddress}:${server.port}(${spring.application.name})
     prefer-ip-address: true
@@ -68,6 +110,7 @@ hystrix:
 #      isolation:
 #        thread:
 #          timeoutInMilliseconds: 50000 #设置超时时间为20s
+
 
 info:
   name: ${spring.application.name}
