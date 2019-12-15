@@ -1,0 +1,89 @@
+/*
+    buildscript代码块中的声明是gradle脚本自身需要的资源。
+    可以声明的资源包括依赖项、第三方插件、maven仓库地址等。
+    gradle在执行脚本时，会优先执行buildscript代码块中的内容，然后才会执行剩余的build脚本。
+*/
+buildscript {
+    /**
+     * gradle脚本执行所需依赖，分别是对应的maven库和插件
+     */
+    buildscript {
+        ext {  //定义一个变量，统一规定springboot的版本
+            springBootVersion = '2.0.9.RELEASE'
+            springCloudVersion = 'Finchley.SR4'
+        }
+        repositories {
+            mavenLocal()
+            maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+            maven { url "http://central.maven.org/maven2/" }
+            mavenCentral()
+        }
+        dependencies {
+            classpath (
+                    "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+            )
+        }
+    }
+}
+
+
+/* 所有项目的通用配置 */
+allprojects {
+    group 'com.ding'
+    version '2.0-SNAPSHOT'
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    sourceCompatibility = 11
+    targetCompatibility = 11
+
+    repositories {
+        mavenLocal()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url "http://central.maven.org/maven2/" }
+        mavenCentral()
+    }
+
+    //指定编码格式
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+}
+/* 所有子项目的通用配置 */
+subprojects {
+    /* 注意gradle插件不再自动应用，所以这里需要指定 */
+    apply plugin: 'org.springframework.boot'
+    /* 依赖管理插件仍然是一个spring-boot-gradle-plugin传递依赖，所以无需在build.gradle配置中明确列出此依赖。 */
+    apply plugin: 'io.spring.dependency-management' /* 依赖管理，用来传递spring的依赖 */
+
+    /* java编译的时候缺省状态下会因为中文字符而失败 */
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+    dependencies {
+        compile (
+                "org.springframework.boot:spring-boot-starter-web",
+                //加入security，是因为访问eureka-server需要用户名和密码访问，为了安全
+//                "org.springframework.boot:spring-boot-starter-security",
+
+                //Spring Boot Actuator，感应服务端变化
+                "org.springframework.boot:spring-boot-starter-actuator",
+                "org.springframework.boot:spring-boot-devtools",
+
+                "com.alibaba:fastjson:1.2.62",
+                group: 'org.projectlombok', name: 'lombok', version: '1.18.10',
+
+                "javax.xml.bind:jaxb-api:2.3.0",
+                "com.sun.xml.bind:jaxb-impl:2.3.0",
+                "org.glassfish.jaxb:jaxb-runtime:2.3.0",
+                "javax.activation:activation:1.1"
+
+        )
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+}
