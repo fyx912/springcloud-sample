@@ -1,0 +1,26 @@
+server:
+  port: 9010
+
+
+
+spring:
+  application:
+    name: eureka-server
+  security:
+    user:
+      name: admin
+      password: 123456
+eureka:
+  instance:
+    appname: ${spring.application.name}
+    hostname: localhost
+  client:
+    register-with-eureka: false #Eureka服务注册中心也会将自己作为客户端来尝试注册它自己
+    fetch-registry: false
+#    allow-redirects: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+security:
+  basic:
+    enabled: false

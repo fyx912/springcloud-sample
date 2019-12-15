@@ -1,0 +1,22 @@
+server:
+  port: 9020
+
+spring:
+  application:
+    name: ribbon-client
+  security:
+    user:
+      name: admin
+      password: 123456
+
+eureka:
+  #自己编写，用于修改注册中心的服务地址
+  serverUrl: 127.0.0.1
+  port: 9010
+  hostname: ${spring.cloud.client.ip-address}
+  client:
+    service-url:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.serverUrl}:${eureka.port}/eureka/
+  instance:
+    instance-id:  ${spring.cloud.client.ip-address}:${server.port}(${spring.application.name})
+    prefer-ip-address: true

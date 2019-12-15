@@ -1,0 +1,43 @@
+server:
+  port: 9030
+
+eureka:
+  #自己编写，用于修改注册中心的服务地址
+  serverUrl: 127.0.0.1
+  port: 9010
+  client:
+    service-url:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.serverUrl}:${eureka.port}/eureka/
+  instance:
+    instance-id:  ${spring.cloud.client.ip-address}:${server.port}(${spring.application.name})
+    prefer-ip-address: true
+spring:
+  application:
+    name: feign-client
+  security:
+    user:
+      name: admin
+      password: 123456
+
+feign:
+  hystrix:
+    enabled: true #开启熔断
+  httpclient:
+    connection-timeout: 5000
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 5000 #feign方式读取数据超时,开始熔断(读取时间应该大于被调用方法的时间就不会被熔断,否则会被熔断)
+
+#开启hystrix请求超时机制   也可以设置成永久不超时
+hystrix:
+  command:
+    default: #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          #如果enabled设置为false，则请求超时交给ribbon或feign控制,为true,则超时作为熔断根据
+          enabled: false #此值需设置为false，为true的时候下面的熔断超时不起作用立马熔断
+      isolation:
+        thread:
+          timeoutInMilliseconds: 8000 #设置超时时间为20s
