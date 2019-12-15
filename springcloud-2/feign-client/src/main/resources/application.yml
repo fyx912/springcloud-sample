@@ -1,6 +1,14 @@
 server:
   port: 9030
 
+spring:
+  application:
+    name: feign-client
+  security:
+    user:
+      name: admin
+      password: 123456
+
 eureka:
   #自己编写，用于修改注册中心的服务地址
   serverUrl: 127.0.0.1
@@ -10,14 +18,23 @@ eureka:
       defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.serverUrl}:${eureka.port}/eureka/
   instance:
     instance-id:  ${spring.cloud.client.ip-address}:${server.port}(${spring.application.name})
-    prefer-ip-address: true
-spring:
-  application:
-    name: feign-client
-  security:
-    user:
-      name: admin
-      password: 123456
+#    prefer-ip-address: true
+
+
+
+ribbon:
+  #请求处理的超时时间
+  ReadTimeout: 4000
+  #请求连接的超时时间
+  ConnectTimeout: 5000
+  #对当前服务的重试次数
+  MaxAutoRetries: 2
+  #切换实例的重试次数
+  MaxAutoRetriesNextServer: 0
+  #对所有操作请求都进行重试
+  OkToRetryOnAllOperations: true
+
+
 
 feign:
   hystrix:

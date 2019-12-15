@@ -17,11 +17,11 @@ import org.springframework.stereotype.Component;
 public  class HelloServiceHystrix implements HelloRemote {
     private Logger log = LoggerFactory.getLogger(HelloWeb.class);
     @Override
-    public String hello() {
+    public String hello(String name) {
         JSONObject json = new JSONObject();
         json.put("code",1);
         json.put("msd","feign进行熔断降级,服务不可用!");
-        log.info("熔断:[{}]",json);
+        log.info("熔断:[{}],\t params:[{}]",json,name);
         return json.toJSONString();
     }
 }

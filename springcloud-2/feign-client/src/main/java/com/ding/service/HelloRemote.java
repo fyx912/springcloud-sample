@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 
 @Component
-@FeignClient(value = "ribbon-service" ,fallback = HelloServiceHystrix.class)
+@FeignClient(value = "ribbon-client" ,fallback = HelloServiceHystrix.class)
 public interface HelloRemote {
     @GetMapping("hello")
-    String hello();
+    String hello(String name);
 }

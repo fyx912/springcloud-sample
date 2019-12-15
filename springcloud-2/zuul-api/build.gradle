@@ -13,9 +13,11 @@ repositories {
 
 dependencies {
     compile (
+            "org.springframework.boot:spring-boot-starter-web",
             "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client",
             //路由
-            "org.springframework.cloud:spring-cloud-starter-netflix-zuul"
+            "org.springframework.cloud:spring-cloud-starter-netflix-zuul",
+            "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
     )
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

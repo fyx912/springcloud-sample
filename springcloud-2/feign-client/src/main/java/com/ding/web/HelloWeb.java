@@ -2,13 +2,17 @@ package com.ding.web;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ding.service.HelloRemote;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,12 +48,13 @@ public class HelloWeb {
         Map map = new HashMap();
         map.put("serverName","feign-service");
         map.put("service",services);
+        map.put("description"," I from feign!");
         jsonObject.put("data",map);
         return jsonObject.toJSONString();
     }
 
     @GetMapping("hello")
-    public String hello(){
+    public String hello(String name){
 
         String services = "Services: "+ discoveryClient.getServices();
         System.out.println(services);
@@ -61,9 +66,11 @@ public class HelloWeb {
         map.put("serverName","feign-service");
         map.put("service",services);
         map.put("hello",discoveryClient.getServices());
+        map.put("description"," from feign!");
+        map.put("name",name);
         jsonObject.put("data",map);
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -74,9 +81,13 @@ public class HelloWeb {
      * 远程调用
      * @return
      */
+    @LoadBalanced
     @GetMapping("remote")
-    public String remote(){
-        String result = helloRemote.hello();
+    public String remote(String name){
+        if (StringUtils.isEmpty(name)){
+            name = " I from feign";
+        }
+        String result = helloRemote.hello(name);
         log.info("result:[{}]",result);
         return result;
     }

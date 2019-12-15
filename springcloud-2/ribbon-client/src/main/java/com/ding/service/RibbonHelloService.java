@@ -6,6 +6,7 @@ package com.ding.service;
  * @Description:
  */
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,10 @@ public class RibbonHelloService {
      *
      * Hystrix会将请求结果放入缓存，默认缓存key既是请求参数
      */
-//    @HystrixCommand(fallbackMethod = "helloFallback")
+    @HystrixCommand(fallbackMethod = "helloFallback")
     public String helloService(String name){
-        String url = "http://feign-service/hello/"+name;
-        url += "?name=Ribbon";
+        String url = "http://feign-client/hello";
+        url += "?name="+name;
         return restTemplate.getForObject(url,String.class);
     }
 

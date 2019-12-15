@@ -61,7 +61,6 @@ subprojects {
 
     dependencies {
         compile (
-                "org.springframework.boot:spring-boot-starter-web",
                 //加入security，是因为访问eureka-server需要用户名和密码访问，为了安全
 //                "org.springframework.boot:spring-boot-starter-security",
 
