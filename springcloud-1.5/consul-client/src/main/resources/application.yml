@@ -1,0 +1,19 @@
+server:
+  port: 8051
+spring:
+  application:
+    name: consul-client
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        register: true #配置启动是否注册服务
+        service-name: ${spring.application.name} #配置 Consul 注册的服务名称
+        #配置 Consul 注册服务 ID
+        instance-id: ${spring.application.name}:${spring.cloud.consul.host}:${server.port}
+        #配置Consul健康检查地址,Actuator组件帮我们进行了实现
+        health-check-path: /health
+        health-check-interval: 10s #配置 Consul 健康检查频率，也就是心跳频率
+        #配置 Consul 注册服务的 Tags，设置为urlprefix-/serviceName的格式，是自动注册到 Fabio 集群中
+        tags: urlprefix-/${spring.application.name}

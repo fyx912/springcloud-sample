@@ -18,6 +18,7 @@ subprojects {
     //打包插件
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.springframework.boot'
+    apply plugin: 'docker'
 
     ext {
         springBootVersion = '1.5.22.RELEASE'
@@ -72,5 +73,6 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
     }
 }
