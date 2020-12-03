@@ -2,7 +2,6 @@ package com.ding.web;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ding.service.HelloRemote;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,7 +55,6 @@ public class HelloWeb {
 
     @GetMapping("hello")
     public String hello(String name){
-
         String services = "Services: "+ discoveryClient.getServices();
         System.out.println(services);
 
@@ -70,7 +69,7 @@ public class HelloWeb {
         map.put("name",name);
         jsonObject.put("data",map);
         try {
-            Thread.sleep(2000);
+            Thread.sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

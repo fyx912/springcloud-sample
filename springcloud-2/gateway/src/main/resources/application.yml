@@ -1,7 +1,5 @@
 server:
   port: 9060
-  servlet:
-    context-path: /api
 
 spring:
   application:
@@ -10,6 +8,12 @@ spring:
     user:
       name: admin
       password: 123456
+  redis:
+    host: 192.168.0.21
+    port: 6379
+    password:
+    timeout: 200
+    database: 1
   cloud:
     gateway:
       discovery:
@@ -28,13 +32,32 @@ spring:
           predicates:
             - Path=/feign/**
           filters:
-           - StripPrefix=1
+            - StripPrefix=1
+            - name:  Hystrix
+              args:
+                name: fallbackCmd
+                fallbackUri: forward:/fallback #fallback对应的uri
+            - name: RequestRateLimiter #限流
+              args:
+                key-resolver: "#{@ipAddrKeyResolver}" #使用SpEL按名称引用bean
+                redis-rate-limiter.replenishRate: 1 #令牌桶每秒填充平均速率,即行等价于允许用户每秒处理多少个请求平均数
+                redis-rate-limiter.burstCapacity: 2 #令牌桶的容量，允许在一秒钟内完成的最大请求数（用的是令牌桶算法）
         - id: ribbon-client-route
           uri: lb://ribbon-client
           predicates:
             - Path=/ribbon/**
           filters:
             - StripPrefix=1
+
+## hystrix设置隔离策略为信号量，超时时间为2秒
+hystrix:
+  command:
+    fallbackCmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+
 
 eureka:
   #自己编写，用于修改注册中心的服务地址
